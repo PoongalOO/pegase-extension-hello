@@ -15,23 +15,13 @@ function el<K extends keyof HTMLElementTagNameMap>(balise: K, texte = '', classe
   return element;
 }
 
-function adresseData(blob: Blob): Promise<string> {
-  return new Promise((resoudre, rejeter) => {
-    const lecteur = new FileReader();
-    lecteur.onload = () => resoudre(String(lecteur.result));
-    lecteur.onerror = () => rejeter(lecteur.error);
-    lecteur.readAsDataURL(blob);
-  });
-}
-
 await p.demarrer();
 p.ajusterHauteur();
 let cartes: Carte[] = [];
 try {
-  // (le Core renvoie aussi le titre du parcours, absent du type de la version 0.1.0 du SDK)
-  const parcours = (await p.parcours.lire()) as { titre?: string; contenu: unknown };
+  const parcours = await p.parcours.lire();
   cartes = normaliser(parcours.contenu).cartes;
-  p.titre(parcours.titre ?? 'Parcours de cartes');
+  p.titre(parcours.titre);
 } catch (erreur) {
   zone.replaceChildren(el('p', erreur instanceof ErreurPegase ? erreur.message : 'Parcours introuvable.', 'alerte'));
   throw erreur;
@@ -43,7 +33,7 @@ const questions = cartes.filter((c) => c.question.trim() !== '').length;
 
 async function envoyer(termine: boolean): Promise<void> {
   try {
-    await p.pont.appeler('resultats.enregistrer', { score: bonnes, termine, pseudo, details: { bonnes, questions, cartes: cartes.length } });
+    await p.resultats.enregistrer({ score: bonnes, termine, pseudo, details: { bonnes, questions, cartes: cartes.length } });
   } catch {
     // résultat non enregistré (réseau) : la partie continue
   }
@@ -61,7 +51,7 @@ function accueil(): void {
   commencer.type = 'button';
   commencer.addEventListener('click', () => {
     pseudo = champ.value.trim();
-    p.pont.appeler('resultats.enregistrer', { score: 0, termine: false, pseudo }).catch(() => null);
+    p.resultats.enregistrer({ score: 0, termine: false, pseudo }).catch(() => null);
     carte(0);
   });
   zone.replaceChildren(
@@ -85,7 +75,7 @@ function carte(i: number): void {
     const image = el('img', '', 'carte-image');
     image.alt = `Illustration : ${c.titre}`;
     bloc.append(image);
-    p.fichiers.lire(c.image).then(adresseData).then((adresse) => { image.src = adresse; }).catch(() => image.remove());
+    p.fichiers.adresse(c.image).then((adresse) => { image.src = adresse; }).catch(() => image.remove());
   }
   if (c.texte) bloc.append(el('p', c.texte));
   const suivant = el('button', i + 1 < cartes.length ? 'Carte suivante' : 'Terminer', 'principal');

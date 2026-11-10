@@ -1,6 +1,6 @@
 {
   "name": "pegase-extension-hello",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "private": true,
   "description": "Pégase Hello Extension : module de démonstration du système d'extensions de Pégase",
   "license": "MIT",
@@ -12,7 +12,7 @@
     "verifier": "tsc -p tsconfig.json"
   },
   "devDependencies": {
-    "@pegase/extension-sdk": "https://github.com/PoongalOO/pegase-extension-sdk/releases/download/v0.1.0/pegase-extension-sdk-0.1.0.tgz",
+    "@pegase/extension-sdk": "https://github.com/PoongalOO/pegase-extension-sdk/releases/download/v0.2.0/pegase-extension-sdk-0.2.0.tgz",
     "esbuild": "^0.25.0",
     "typescript": "^5.9.0"
   }
