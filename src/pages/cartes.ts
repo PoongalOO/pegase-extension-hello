@@ -42,7 +42,8 @@ async function afficher(): Promise<void> {
       }
     });
     const cartes = normaliser(projet.contenu).cartes.length;
-    liste.append(el('li', {}, ouvrir, el('span', { class: 'discret', texte: ` ${cartes} carte${cartes > 1 ? 's' : ''}, modifié le ${new Date(projet.modifie).toLocaleDateString('fr-FR')}` }), supprimer));
+    const publie = projet.publication ? `, publié (code ${projet.publication.code})` : '';
+    liste.append(el('li', {}, ouvrir, el('span', { class: 'discret', texte: ` ${cartes} carte${cartes > 1 ? 's' : ''}, modifié le ${new Date(projet.modifie).toLocaleDateString('fr-FR')}${publie}` }), supprimer));
   }
   zone.replaceChildren(
     el('h1', { texte: 'Mes cartes' }),

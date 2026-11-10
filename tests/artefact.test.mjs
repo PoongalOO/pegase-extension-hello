@@ -33,7 +33,10 @@ test('contenu : manifeste, licence, pages et scripts regroupés, rien d\'autre',
   for (const page of manifeste.points_entree.pages) {
     assert.ok(chemins.includes(page.fichier), page.fichier);
   }
-  assert.ok(chemins.every((c) => /^(pegase-extension\.json|LICENSE|README\.md|interface\/[a-z-]+\.(html|js|css))$/.test(c)), chemins.join(', '));
+  if (manifeste.points_entree.joueur) {
+    assert.ok(chemins.includes(manifeste.points_entree.joueur.fichier));
+  }
+  assert.ok(chemins.every((c) => /^(pegase-extension\.json|LICENSE|README\.md|(interface|joueur)\/[a-z-]+\.(html|js|css))$/.test(c)), chemins.join(', '));
   // aucun module externe : les scripts regroupés n'importent rien
   for (const script of chemins.filter((c) => c.endsWith('.js'))) {
     assert.doesNotMatch(readFileSync(`build/extension/${script}`, 'utf8'), /^\s*import\s.+from\s/m, script);

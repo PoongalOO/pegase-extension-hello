@@ -130,15 +130,71 @@ function afficher(): void {
   });
   const retour = el('button', { type: 'button', class: 'lien', texte: '← Mes cartes' });
   retour.addEventListener('click', () => p.naviguer('mes-cartes'));
-  zone.replaceChildren(
+  zone.replaceChildren(...[
     retour,
     el('h1', { texte: 'Édition des cartes' }),
+    publication(),
     el('div', { class: 'champ' }, el('label', { for: 'titre-projet', texte: 'Titre du projet' }), titre),
     cartes,
     el('p', { class: 'discret', texte: `${contenu.cartes.length} carte(s) sur ${cartesMax} au plus.` }),
     el('div', { class: 'actions' }, ajouter, enregistrer),
     problemes,
-  );
+  ].filter((e): e is HTMLElement => e !== null));
+}
+
+/**
+ * Publication dans le lecteur (version 1.2.0, permission facultative parcours:publier) : code et adresse du parcours,
+ * résultats des joueurs (permission facultative resultats:lire)
+ */
+function publication(): HTMLElement | null {
+  const peutPublier = contexte.permissions.includes('parcours:publier');
+  if (!peutPublier && !projet.publication) {
+    return null;
+  }
+  const bloc = el('section', { class: 'carte-bloc publication', 'aria-label': 'Publication dans le lecteur' });
+  if (projet.publication) {
+    bloc.append(
+      el('p', {}, 'Publié dans le lecteur de Pégase, code ', el('code', { texte: projet.publication.code })),
+      el('p', { class: 'discret', texte: `Adresse : ${projet.publication.adresse ?? ''}` }),
+      el('p', { class: 'discret', texte: `Version publiée : ${projet.publication.version} ; enregistrez puis publiez de nouveau pour mettre à jour le parcours.` }),
+    );
+  } else {
+    bloc.append(el('p', { texte: 'Publiez le projet pour qu\'il soit joué dans le lecteur de Pégase avec son code.' }));
+  }
+  if (peutPublier) {
+    const publier = el('button', { type: 'button', class: 'secondaire', texte: projet.publication ? 'Publier de nouveau' : 'Publier dans le lecteur' });
+    publier.addEventListener('click', async () => {
+      try {
+        const publie = await p.projets.publier(projet.id); // confirmation demandée par Pégase
+        projet = { ...projet, publication: publie };
+        p.message('succes', `Parcours publié : code ${publie.code}`);
+        afficher();
+      } catch (erreur) {
+        p.message('alerte', expliquer(erreur));
+      }
+    });
+    bloc.append(publier);
+  }
+  if (projet.publication && contexte.permissions.includes('resultats:lire')) {
+    const tableau = el('table', { class: 'resultats' });
+    bloc.append(el('h2', { texte: 'Résultats des joueurs' }), tableau);
+    p.resultats.lister(projet.id).then((resultats) => {
+      if (resultats.length === 0) {
+        tableau.replaceWith(el('p', { class: 'discret', texte: 'Aucune partie pour l\'instant.' }));
+        return;
+      }
+      tableau.append(el('tr', {}, el('th', { texte: 'Joueur' }), el('th', { texte: 'Bonnes réponses' }), el('th', { texte: 'Terminé' }), el('th', { texte: 'Date' })));
+      for (const r of resultats) {
+        tableau.append(el('tr', {},
+          el('td', { texte: r.pseudo ?? 'anonyme' }),
+          el('td', { texte: String(r.score) }),
+          el('td', { texte: r.termine ? 'oui' : 'non' }),
+          el('td', { texte: new Date(r.date).toLocaleString('fr-FR') })));
+      }
+    }).catch((erreur) => tableau.replaceWith(el('p', { class: 'discret', texte: expliquer(erreur) })));
+  }
+
+  return bloc;
 }
 
 afficher();

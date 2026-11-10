@@ -38,6 +38,13 @@ Déposez ou téléchargez la 1.1.0 : elle reste en attente, la 1.0.0 continue de
 **nouvelle permission** `fichiers:deposer` (images sur les cartes, facultative). Après l'accord, Pégase sauvegarde les
 données puis applique la migration du stockage (version 2). Un retour à la 1.0.0 reste possible depuis la fiche.
 
+## Version 1.2.0 : parcours joués dans le lecteur
+
+Deux nouvelles permissions facultatives : `parcours:publier` (bouton « Publier dans le lecteur » de l'édition : le
+parcours reçoit un code `ext-xxxxxxxx`, à saisir dans le lecteur de Pégase ou à ouvrir par
+`/extensions/joueur/<code>`) et `resultats:lire` (résultats des joueurs affichés à l'auteur). Sans elles, le module
+fonctionne comme la 1.1.0.
+
 ## Désactiver, désinstaller, réinstaller, purger
 
 - **Désactiver** : pages, menu, carte, API et événements du module bloqués immédiatement ; le portail continue.

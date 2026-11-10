@@ -45,3 +45,8 @@ button:disabled { opacity: 0.5; cursor: not-allowed; }
 .cartes { padding-left: 20px; }
 .carte-image { max-width: 240px; max-height: 160px; border-radius: 8px; display: block; }
 .carte-bloc > button { justify-self: start; }
+.succes { color: #067647; }
+.publication { border-left: 4px solid var(--rouge); }
+.publication code { font-size: 18px; color: var(--nuit); }
+table.resultats { border-collapse: collapse; max-width: 760px; width: 100%; }
+table.resultats th, table.resultats td { text-align: left; padding: 6px 8px; border-bottom: 1px solid var(--bord); }

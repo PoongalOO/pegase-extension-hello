@@ -3,8 +3,8 @@
   "manifeste": 1,
   "id": "poongaloo/hello",
   "nom": "Pégase Hello Extension",
-  "description": "Module de démonstration : page Hello Pégase, message enregistré, réception d'événement, paramètre réglable et mini-espace de création de cartes.",
-  "version": "1.1.0",
+  "description": "Module de démonstration : page Hello Pégase, message enregistré, réception d'événement, paramètre réglable et mini-espace de création de cartes jouées dans le lecteur.",
+  "version": "1.2.0",
   "auteurs": [
     {
       "nom": "PoongalOO",
@@ -53,6 +53,16 @@
     {
       "id": "fichiers:deposer",
       "justification": "Ajouter une image à une carte (nouveauté de la version 1.1.0). Sans cette permission, les cartes restent sans image.",
+      "facultative": true
+    },
+    {
+      "id": "parcours:publier",
+      "justification": "Publier un projet de cartes dans le lecteur de Pégase, pour qu'il soit joué par son code (nouveauté de la 1.2.0).",
+      "facultative": true
+    },
+    {
+      "id": "resultats:lire",
+      "justification": "Montrer à l'auteur d'un parcours publié les résultats de ses joueurs (pseudo facultatif, score).",
       "facultative": true
     }
   ],
@@ -120,6 +130,9 @@
           "maximum": 100
         }
       ]
+    },
+    "joueur": {
+      "fichier": "joueur/index.html"
     }
   },
   "capacites": {

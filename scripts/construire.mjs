@@ -27,6 +27,20 @@ await build({
   legalComments: 'none',
   logLevel: 'warning',
 });
+// joueur des parcours publiés (lecteur de Pégase, version 1.2.0)
+await build({
+  entryPoints: [join(racine, 'src', 'joueur', 'joueur.ts')],
+  outdir: join(sortie, 'joueur'),
+  bundle: true,
+  format: 'esm',
+  platform: 'browser',
+  target: 'es2022',
+  charset: 'utf8',
+  legalComments: 'none',
+  logLevel: 'warning',
+});
+cpSync(join(racine, 'pages-joueur', 'index.html'), join(sortie, 'joueur', 'index.html'));
+cpSync(join(racine, 'pages', 'styles.css'), join(sortie, 'joueur', 'styles.css'));
 for (const fichier of readdirSync(join(racine, 'pages'))) {
   cpSync(join(racine, 'pages', fichier), join(sortie, 'interface', fichier));
 }

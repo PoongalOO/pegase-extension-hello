@@ -17,6 +17,7 @@ son artefact publié, une archive `.pegext` contrôlée par son empreinte SHA-25
 | 7. Désinstallation en conservant les données, réinstallation et données retrouvées | administration de Pégase | — |
 | 8. Mise à jour : versions 1.0.0 puis 1.1.0 (images sur les cartes, nouvelle permission, migration des données) | releases | `fichiers:deposer` (1.1.0) |
 | Mini-espace de création : projets de cartes à question | pages `mes-cartes` et `edition` | `projets:*` |
+| Parcours publié dans le lecteur de Pégase (code `ext-…`), joué sans compte, résultats pour l'auteur (1.2.0) | page `edition`, joueur | `parcours:publier`, `resultats:lire` (facultatives) |
 
 Le module tourne dans une iframe isolée par le navigateur : il ne voit ni les cookies, ni la session, ni le reste du
 portail, et ne peut contacter aucun serveur. Tout passe par le pont de Pégase, qui vérifie chaque appel.
