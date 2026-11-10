@@ -1,0 +1,36 @@
+# Publication d'une version : étiquette vX.Y.Z identique à la version du manifeste ; archive .pegext reproductible et
+# son empreinte SHA-256 attachées à la release GitHub, que Pégase installe par version et empreinte
+name: Publication
+
+on:
+  push:
+    tags: ['v*.*.*']
+
+permissions:
+  contents: write
+
+jobs:
+  publication:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 24
+          cache: npm
+      - run: npm ci
+      - run: npm test
+      - name: Étiquette et manifeste cohérents
+        run: |
+          VERSION=$(node -p "require('./extension/pegase-extension.json').version")
+          test "v$VERSION" = "$GITHUB_REF_NAME" || { echo "Étiquette $GITHUB_REF_NAME, manifeste $VERSION"; exit 1; }
+          echo "VERSION=$VERSION" >> "$GITHUB_ENV"
+      - name: Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          ARCHIVE="dist/poongaloo-hello-$VERSION.pegext"
+          EMPREINTE=$(cut -d' ' -f1 "$ARCHIVE.sha256")
+          gh release create "$GITHUB_REF_NAME" "$ARCHIVE" "$ARCHIVE.sha256" \
+            --title "Pégase Hello Extension $VERSION" \
+            --notes "Archive à installer dans Pégase (Administration › Extensions). Empreinte SHA-256 : \`$EMPREINTE\`"

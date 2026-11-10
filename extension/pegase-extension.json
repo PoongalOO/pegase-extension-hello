@@ -1,0 +1,58 @@
+{
+  "$schema": "urn:pegase:schema:pegase-extension:1",
+  "manifeste": 1,
+  "id": "poongaloo/hello",
+  "nom": "Pégase Hello Extension",
+  "description": "Module de démonstration : page Hello Pégase, message enregistré, réception d'événement, paramètre réglable et mini-espace de création de cartes.",
+  "version": "1.0.0",
+  "auteurs": [{ "nom": "PoongalOO", "url": "https://github.com/PoongalOO" }],
+  "licence": "MIT",
+  "compatibilite": { "pegase": ">=1.8.0 <2.0.0", "api": "1" },
+  "dependances": {},
+  "permissions": [
+    { "id": "utilisateur:profil", "justification": "Afficher la formule de salutation suivie du prénom et du nom de la personne connectée." },
+    { "id": "stockage:prive", "justification": "Enregistrer le message personnel de chaque personne." },
+    { "id": "stockage:partage", "justification": "Tenir le journal des événements reçus, affiché aux administrateurs." },
+    { "id": "projets:lire", "justification": "Lister les projets de cartes de la personne connectée." },
+    { "id": "projets:creer", "justification": "Créer un projet de cartes." },
+    { "id": "projets:modifier", "justification": "Enregistrer les cartes d'un projet." },
+    { "id": "projets:supprimer", "justification": "Supprimer un projet de cartes, après confirmation de la personne." },
+    { "id": "evenements:utilisateur.cree", "justification": "Démontrer la réception d'un événement : compter les comptes créés, sans aucune donnée personnelle." }
+  ],
+  "points_entree": {
+    "pages": [
+      { "id": "accueil", "titre": "Hello Pégase", "fichier": "interface/index.html", "acces": "public" },
+      { "id": "mes-cartes", "titre": "Mes cartes", "fichier": "interface/cartes.html", "acces": "valide" },
+      { "id": "edition", "titre": "Édition des cartes", "fichier": "interface/edition.html", "acces": "valide", "parametre": true },
+      { "id": "statistiques", "titre": "Statistiques Hello", "fichier": "interface/statistiques.html", "acces": "administration" }
+    ],
+    "menu": [{ "page": "accueil", "libelle": "Hello", "acces": "public" }],
+    "cartes": [
+      { "page": "mes-cartes", "titre": "Hello : cartes", "description": "Créez une suite de cartes à questions, pour découvrir les extensions de Pégase.", "icone": "bi-card-text", "acces": "valide" }
+    ],
+    "parametres": {
+      "champs": [
+        { "id": "salutation", "libelle": "Formule de salutation", "aide": "Affichée devant le nom de la personne connectée.", "type": "texte", "defaut": "Bonjour", "obligatoire": true, "longueur_max": 40 },
+        { "id": "cartes-max", "libelle": "Nombre maximal de cartes par projet", "type": "nombre", "defaut": 20, "minimum": 1, "maximum": 100 }
+      ]
+    }
+  },
+  "capacites": { "interface": true, "serveur": false },
+  "evenements": { "abonnements": ["utilisateur.cree"] },
+  "stockage": {
+    "version": 1,
+    "collections": [
+      { "nom": "messages", "portee": "utilisateur", "documents_max": 1 },
+      { "nom": "journal", "portee": "partage", "documents_max": 10000 }
+    ],
+    "quota_mo": 20,
+    "retention_jours": 365
+  },
+  "distribution": {
+    "depot": "https://github.com/PoongalOO/pegase-extension-hello",
+    "support": "https://github.com/PoongalOO/pegase-extension-hello/issues",
+    "categories": ["espace-de-creation"],
+    "tarif": "gratuit",
+    "mots_cles": ["démonstration", "cartes"]
+  }
+}

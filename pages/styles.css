@@ -1,0 +1,47 @@
+/* Pégase Hello Extension : styles de l'interface (iframe isolée, aucune police ni ressource externe) */
+:root {
+  --rouge: #bf1324;
+  --nuit: #1f2647;
+  --texte: #363f72;
+  --bord: #d5d9eb;
+  --fond: #f8f9fc;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  padding: 16px 20px 24px;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  font-size: 16px;
+  line-height: 1.5;
+  color: var(--texte);
+  background: white;
+}
+h1 { color: var(--nuit); font-size: 28px; margin: 8px 0 16px; }
+label { display: block; font-weight: 600; color: var(--nuit); margin-bottom: 4px; }
+input[type="text"], textarea {
+  width: 100%;
+  max-width: 640px;
+  font: inherit;
+  padding: 8px 12px;
+  border: 1px solid var(--bord);
+  border-radius: 8px;
+}
+input:focus-visible, textarea:focus-visible, button:focus-visible { outline: 2px solid var(--rouge); outline-offset: 2px; }
+button { font: inherit; cursor: pointer; border-radius: 8px; padding: 8px 16px; border: 1px solid var(--bord); background: white; color: var(--texte); }
+button.principal { background: var(--rouge); border-color: var(--rouge); color: white; font-weight: 600; }
+button.secondaire { border-color: var(--nuit); color: var(--nuit); }
+button.danger { color: #b42318; border-color: #fecdca; }
+button.lien { border: none; padding: 0; color: var(--nuit); text-decoration: underline; background: none; }
+button:disabled { opacity: 0.5; cursor: not-allowed; }
+.carte-bloc { border: 1px solid var(--bord); border-radius: 12px; padding: 16px; margin: 16px 0; background: var(--fond); display: grid; gap: 10px; max-width: 760px; }
+.ligne { grid-template-columns: 1fr; }
+.champ { display: grid; gap: 4px; margin-bottom: 8px; }
+.actions { display: flex; gap: 12px; flex-wrap: wrap; }
+.discret { color: #4e5ba6; font-size: 14px; }
+.alerte { color: #b42318; }
+.projets { list-style: none; padding: 0; max-width: 760px; }
+.projets li { display: flex; align-items: center; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--bord); }
+.projets li .danger { margin-left: auto; }
+.cartes { padding-left: 20px; }
+.carte-image { max-width: 240px; max-height: 160px; border-radius: 8px; display: block; }
+.carte-bloc > button { justify-self: start; }
