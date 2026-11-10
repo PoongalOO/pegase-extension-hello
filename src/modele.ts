@@ -8,6 +8,8 @@ export interface Carte {
   texte: string;
   question: string;
   reponse: string;
+  /** image déposée dans Pégase (identifiant de fichier, version 1.1.0) */
+  image?: string | null;
 }
 
 export interface ContenuProjet {
@@ -17,7 +19,7 @@ export interface ContenuProjet {
 export const LIMITES = { titre: 80, texte: 1000, question: 200, reponse: 80, titreProjet: 120 };
 
 export function carteVide(): Carte {
-  return { titre: '', texte: '', question: '', reponse: '' };
+  return { titre: '', texte: '', question: '', reponse: '', image: null };
 }
 
 /** Contenu lu dans le stockage, remis en forme (champs manquants, types, longueurs) */
@@ -30,6 +32,7 @@ export function normaliser(contenu: unknown): ContenuProjet {
       texte: texte((carte as Partial<Carte>)?.texte, LIMITES.texte),
       question: texte((carte as Partial<Carte>)?.question, LIMITES.question),
       reponse: texte((carte as Partial<Carte>)?.reponse, LIMITES.reponse),
+      image: identifiantFichier((carte as Partial<Carte>)?.image),
     })),
   };
 }
@@ -70,6 +73,11 @@ export function entier(valeur: unknown, defaut: number, minimum: number, maximum
   const nombre = typeof valeur === 'number' ? valeur : Number.parseInt(String(valeur ?? ''), 10);
 
   return Number.isFinite(nombre) ? Math.min(maximum, Math.max(minimum, Math.trunc(nombre))) : defaut;
+}
+
+/** Identifiant de fichier de Pégase (ULID), ou null */
+export function identifiantFichier(valeur: unknown): string | null {
+  return typeof valeur === 'string' && /^[0-9A-HJKMNP-TV-Z]{26}$/.test(valeur) ? valeur : null;
 }
 
 function texte(valeur: unknown, longueur: number): string {

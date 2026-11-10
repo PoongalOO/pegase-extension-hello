@@ -29,6 +29,69 @@ function champ(etiquette: string, valeur: string, longueur: number, long = false
   return el('div', { class: 'champ' }, el('label', { for: id, texte: etiquette }), saisie);
 }
 
+function adresseData(blob: Blob): Promise<string> {
+  return new Promise((resoudre, rejeter) => {
+    const lecteur = new FileReader();
+    lecteur.onload = () => resoudre(String(lecteur.result));
+    lecteur.onerror = () => rejeter(lecteur.error);
+    lecteur.readAsDataURL(blob);
+  });
+}
+
+const imagesPermises = contexte.permissions.includes('fichiers:deposer');
+const apercus = new Map<string, string>();
+
+/**
+ * Image de la carte (version 1.1.0, permission facultative fichiers:deposer) : dépôt dans Pégase, qui la contrôle et
+ * la réencode, puis aperçu lu par le pont et affiché par une adresse data: (une adresse blob: créée dans l'iframe,
+ * d'origine opaque, ne se charge pas)
+ */
+function imageCarte(carte: Carte): HTMLElement | null {
+  if (!imagesPermises && !carte.image) {
+    return null;
+  }
+  const bloc = el('div', { class: 'champ' });
+  const apercu = el('img', { class: 'carte-image', alt: carte.titre ? `Image de la carte ${carte.titre}` : 'Image de la carte', hidden: !carte.image });
+  if (carte.image) {
+    const url = apercus.get(carte.image);
+    if (url) {
+      apercu.src = url;
+    } else {
+      p.fichiers.lire(carte.image).then(adresseData).then((adresse) => {
+        apercus.set(carte.image as string, adresse);
+        apercu.src = adresse;
+      }).catch(() => { apercu.hidden = true; });
+    }
+  }
+  bloc.append(apercu);
+  if (imagesPermises) {
+    const id = 'i' + Math.random().toString(36).slice(2, 9);
+    const choix = el('input', { id, type: 'file', accept: 'image/png,image/jpeg,image/webp,image/gif' });
+    const etat = el('span', { class: 'discret', role: 'status' });
+    choix.addEventListener('change', async () => {
+      const fichier = choix.files?.[0];
+      if (!fichier) return;
+      etat.textContent = 'Envoi…';
+      try {
+        const depose = await p.fichiers.deposer(fichier);
+        carte.image = depose.id;
+        afficher();
+      } catch (erreur) {
+        etat.textContent = expliquer(erreur);
+      }
+    });
+    bloc.prepend(el('label', { for: id, texte: carte.image ? 'Remplacer l\'image' : 'Image (facultative)' }));
+    bloc.append(choix, etat);
+    if (carte.image) {
+      const retirer = el('button', { type: 'button', class: 'lien', texte: 'Retirer l\'image' });
+      retirer.addEventListener('click', () => { carte.image = null; afficher(); });
+      bloc.append(retirer);
+    }
+  }
+
+  return bloc;
+}
+
 function afficher(): void {
   const titre = el('input', { id: 'titre-projet', type: 'text', maxlength: String(LIMITES.titreProjet) });
   titre.value = projet.titre;
@@ -40,6 +103,7 @@ function afficher(): void {
     const verdict = el('span', { class: 'discret', role: 'status' });
     essai.addEventListener('input', () => { verdict.textContent = essai.value === '' ? '' : (reponseJuste(carte.reponse, essai.value) ? ' Juste' : ' Pas encore'); });
     cartes.append(el('li', { class: 'carte-bloc' },
+      imageCarte(carte),
       champ('Titre', carte.titre, LIMITES.titre, false, (v) => { carte.titre = v; }),
       champ('Texte', carte.texte, LIMITES.texte, true, (v) => { carte.texte = v; }),
       champ('Question', carte.question, LIMITES.question, false, (v) => { carte.question = v; }),
