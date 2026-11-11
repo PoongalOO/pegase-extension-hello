@@ -4,7 +4,7 @@
   "id": "poongaloo/hello",
   "nom": "Pégase Hello Extension",
   "description": "Module de démonstration : page Hello Pégase, message enregistré, réception d'événement, paramètre réglable et mini-espace de création de cartes jouées dans le lecteur.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "auteurs": [
     {
       "nom": "PoongalOO",
@@ -175,8 +175,8 @@
     ]
   },
   "distribution": {
-    "depot": "https://github.com/PoongalOO/pegase-extension-hello",
-    "support": "https://github.com/PoongalOO/pegase-extension-hello/issues",
+    "depot": "https://github.com/PoongalOO/pegaselab-extension-hello",
+    "support": "https://github.com/PoongalOO/pegaselab-extension-hello/issues",
     "categories": [
       "espace-de-creation"
     ],

@@ -7,7 +7,7 @@ installée, après contrôle de son empreinte.
 ## Depuis la release GitHub (recommandé)
 
 1. Dans Pégase : **Administration › Technique › Extensions › Extensions disponibles**. Le dépôt
-   `PoongalOO/pegase-extension-hello` doit être autorisé (`EXTENSIONS_SOURCES`, autorisé par défaut).
+   `PoongalOO/pegaselab-extension-hello` doit être autorisé (`EXTENSIONS_SOURCES`, autorisé par défaut).
 2. Choisissez la version et vérifiez l'**empreinte SHA-256** : elle doit être identique à celle du fichier
    `poongaloo-hello-X.Y.Z.pegext.sha256` publié avec la release. C'est l'empreinte qui fait foi, pas l'étiquette.
 3. **Installer…** : l'archive est téléchargée et contrôlée ; la version est mise **en attente de votre accord**.
@@ -18,7 +18,7 @@ installée, après contrôle de son empreinte.
 En ligne de commande, sur le serveur :
 
 ```sh
-bin/console extensions installer github:PoongalOO/pegase-extension-hello --numero=1.0.0 --empreinte=<sha256>
+bin/console extensions installer github:PoongalOO/pegaselab-extension-hello --numero=1.0.0 --empreinte=<sha256>
 bin/console extensions accorder poongaloo/hello
 bin/console extensions activer poongaloo/hello
 ```
