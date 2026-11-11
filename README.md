@@ -1,6 +1,6 @@
 # Pégase Hello Extension
 
-Module de démonstration du système d'extensions de [Pégase](https://github.com/PoongalOO/pegase), dans un dépôt
+Module de démonstration du système d'extensions de [Pégase](https://github.com/PoongalOO/pegaselab), dans un dépôt
 indépendant. Il ne contient aucun code de Pégase et Pégase ne contient aucun code de ce module : il s'installe depuis
 son artefact publié, une archive `.pegext` contrôlée par son empreinte SHA-256.
 
